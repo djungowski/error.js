@@ -3,31 +3,64 @@ var ErrorJS;
 ErrorJS = function() {
 };
 
+/**
+ * error.js Options
+ *
+ * @var Object
+ */
 ErrorJS.options = {
 	supressErrors: false,
 	adapter: 'console'
 };
 
+/**
+ * Set error.js Options
+ *
+ * Possible options:
+ *  supressErrors: Suppress the default Javascript error (defaults to false)
+ *  adapter: Which Error Adapter to use (defaults to 'console')
+ *
+ * @var Object options
+ *
+ */
 ErrorJS.setOptions = function(options) {
 	for (var option in options) {
 		ErrorJS.options[option] = options[option];
 	}
 };
 
-ErrorJS.adapter = null;
+/**
+ * The Error Adapter, which can be configured with setOptions()
+ *
+ * @var ErrorJS.Adapter
+ */
+ErrorJS.errorAdapter = null;
 
+/**
+ * Get the configured Error Adapter
+ * 
+ * @return ErrorJS.Adapter
+ */
 ErrorJS.getAdapter = function() {
 	var adapterName;
 
-	if (ErrorJS.adapter === null) {
+	if (ErrorJS.errorAdapter === null) {
 		adapterName = 'ErrorJS.Adapter.';
 		// console => Console
 		adapterName += ErrorJS.options.adapter.charAt(0).toUpperCase() + ErrorJS.options.adapter.slice(1);
-		ErrorJS.adapter = new ErrorJS.Adapter['Console'];
+		ErrorJS.errorAdapter = new ErrorJS.Adapter['Console'];
 	}
-	return ErrorJS.adapter;
+	return ErrorJS.errorAdapter;
 };
 
+/**
+ * Error Handler that handles all the errors that occur on a webpage
+ * and passes it on to the adapter
+ *
+ * @var String message
+ * @var String url
+ * @var Number line
+ */
 ErrorJS.handleError = function(message, url, line) {
 	var errorDetails;
 
@@ -41,13 +74,37 @@ ErrorJS.handleError = function(message, url, line) {
 	return ErrorJS.options.supressErrors;
 };
 
+/**
+ * The abstract adapter implementation
+ *
+ */
 ErrorJS.Adapter = function() {
 };
 
-ErrorJS.Adapter.prototype.handleError = function(message, url, line) {
+/**
+ * Handle the error
+ *
+ * errorDetails contains the following keys:
+ *   message: The error message
+ *   url: The file the error occured in
+ *   line: The line the error occured in
+ * 
+ * @var Object errorDetails
+ */
+ErrorJS.Adapter.prototype.handleError = function(errorDetails) {
     // Implement Error Handling in subclass here
 };
 
+/**
+ * Format the error message by replacing
+ *   {1} with the error message
+ *   {2} with the file
+ *   {3} with the line
+ *
+ * @var String errorMessage
+ * @var Object errorDetails
+ * @return String
+ */
 ErrorJS.Adapter.prototype.formatErrorMessage = function(errorMessage, errorDetails) {
     errorMessage = errorMessage.replace('{1}', errorDetails.message);
     errorMessage = errorMessage.replace('{2}', errorDetails.url);
@@ -55,4 +112,5 @@ ErrorJS.Adapter.prototype.formatErrorMessage = function(errorMessage, errorDetai
     return errorMessage;
 };
 
+// Register the error handler for the web application
 window.onerror = ErrorJS.handleError;

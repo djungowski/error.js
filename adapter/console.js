@@ -1,12 +1,22 @@
+/**
+ * This is implementation is an example
+ * 
+ */
 ErrorJS.Adapter.Console = function() {
 };
 
+// Inherit from abstract implementation
 ErrorJS.Adapter.Console.prototype = new ErrorJS.Adapter();
 
+/**
+ * Handle the Javascript error by writing it formatted to the console
+ * 
+ * @var Object errorDetails
+ */
 ErrorJS.Adapter.Console.prototype.handleError = function(errorDetails) {
 	var errorMessage;
 
-	errorMessage = 'JavaScript error: "{1}" in "{2}" on line {3}';
+	errorMessage = '"{1}" in "{2}" on line {3}';
 	errorMessage = this.formatErrorMessage(errorMessage, errorDetails);
-	console.log(errorMessage);
+	console.error(errorMessage);
 };
