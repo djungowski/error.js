@@ -3,9 +3,14 @@
 <head>
 	<title>error.js Example</title>
 	<script src="error.js"></script>
-	<script src="adapter/console.js"></script>
+	<script src="adapter/extjs.js"></script>
 	<script>ErrorJS.setOptions({
-		supressErrors: true
+		supressErrors: false,
+		adapter: 'extjs',
+		adapterOptions: {
+			method: 'post',
+			url: 'foobar.php'
+		}
 	});</script>
 </head>
 <body>
