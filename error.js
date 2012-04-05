@@ -10,7 +10,8 @@ ErrorJS = function() {
  */
 ErrorJS.options = {
 	supressErrors: false,
-	adapter: 'console'
+	adapter: 'console',
+	adapterOptions: {}
 };
 
 /**
@@ -45,10 +46,9 @@ ErrorJS.getAdapter = function() {
 	var adapterName;
 
 	if (ErrorJS.errorAdapter === null) {
-		adapterName = 'ErrorJS.Adapter.';
 		// console => Console
-		adapterName += ErrorJS.options.adapter.charAt(0).toUpperCase() + ErrorJS.options.adapter.slice(1);
-		ErrorJS.errorAdapter = new ErrorJS.Adapter['Console'];
+		adapterName = ErrorJS.options.adapter.charAt(0).toUpperCase() + ErrorJS.options.adapter.slice(1);
+		ErrorJS.errorAdapter = new ErrorJS.Adapter[adapterName](ErrorJS.options.adapterOptions);
 	}
 	return ErrorJS.errorAdapter;
 };
@@ -78,7 +78,25 @@ ErrorJS.handleError = function(message, url, line) {
  * The abstract adapter implementation
  *
  */
-ErrorJS.Adapter = function() {
+ErrorJS.Adapter = function(options) {
+	this.setOptions(options);
+};
+
+/**
+ * Adapter Options
+ *
+ * @var Object
+ */
+ErrorJS.Adapter.prototype.options = {};
+
+/**
+ * Set Adapter Options
+ * Possible Options depend on the adapter
+ *
+ * @var Object options
+ */
+ErrorJS.Adapter.prototype.setOptions = function(options) {
+	this.options = options;
 };
 
 /**

@@ -2,7 +2,8 @@
  * This is implementation is an example
  * 
  */
-ErrorJS.Adapter.Console = function() {
+ErrorJS.Adapter.Console = function(options) {
+	this.setOptions(options);
 };
 
 // Inherit from abstract implementation
